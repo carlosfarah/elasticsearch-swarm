@@ -1,0 +1,27 @@
+version: '3'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
+    hostname: es1
+    network_mode: "elastic"
+    container_name: es1
+    environment:
+- cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./config-elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.5.0
+    network_mode: "host"
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./config-kibana.yml:/usr/share/kibana/config/kibana.yml
